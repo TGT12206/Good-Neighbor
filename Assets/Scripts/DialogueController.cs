@@ -4,28 +4,53 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-public class DialogueControl : MonoBehaviour
+public class DialogueController : MonoBehaviour
 {
-    [SerializeField] private TextMeshPro TextObject;
+    [SerializeField] private TextMeshProUGUI TextObject;
+    [SerializeField] private TextMeshProUGUI ScoreDisplay;
     string text;
-    string[] dialogue;
-    int lineNumber;
+    Dialogue dialogue;
+    int lineNumber = -1;
+    int points;
+    public bool isStarted = false;
+    public bool isFinished = false;
     private void Start()
     {
-        dialogue = JsonUtility.FromJson<string[]>(File.ReadAllText("Dialogue/Level1"));
+        dialogue = JsonUtility.FromJson<Dialogue>(File.ReadAllText("Assets/Dialogue/Level1.json"));
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        
+    }
+    private void FixedUpdate()
+    {
+        if (!isFinished && isStarted)
         {
-            NextLine();
+            ChangePoints(1);
+        }
+        if (isFinished)
+        {
+            ScoreDisplay.text = "Final Score: " + points;
         }
     }
-
-    void NextLine()
+    public void NextLine()
     {
-        text = dialogue[lineNumber];
+        if (lineNumber >= dialogue.lines.Length)
+        {
+            return;
+        }
         lineNumber++;
+        text = dialogue.lines[lineNumber];
+        TextObject.text = text;
+    }
+    private class Dialogue
+    {
+        public string[] lines;
+    }
+    public void ChangePoints(int pts)
+    {
+        points += pts;
+        ScoreDisplay.text = "Score: " + points;
     }
 }
