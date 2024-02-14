@@ -9,14 +9,21 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI TextObject;
     [SerializeField] private TextMeshProUGUI ScoreDisplay;
     string text;
-    Dialogue dialogue;
+    string[] dialogue = {"Granny: Oh my gah! A truck is rolling downhill!",
+            "Granny: I know what to do!",
+	        "Granny: Like a good neighbor statefarm is there!",
+	        "Granny: Help! That truck is gonna hit stuff!",
+	        "Jake: Got it, I'll save everyone's stuff!",
+	        "",
+    	    "Jake: Like a good neighbor, Granny is here!",
+    	    "Jake: Granny, hit the brakes!"};
     int lineNumber = -1;
     int points;
     public bool isStarted = false;
     public bool isFinished = false;
     private void Start()
     {
-        dialogue = JsonUtility.FromJson<Dialogue>(File.ReadAllText("Assets/Dialogue/Level1.json"));
+
     }
     // Update is called once per frame
     void Update()
@@ -36,17 +43,13 @@ public class DialogueController : MonoBehaviour
     }
     public void NextLine()
     {
-        if (lineNumber >= dialogue.lines.Length)
+        if (lineNumber >= dialogue.Length)
         {
             return;
         }
         lineNumber++;
-        text = dialogue.lines[lineNumber];
+        text = dialogue[lineNumber];
         TextObject.text = text;
-    }
-    private class Dialogue
-    {
-        public string[] lines;
     }
     public void ChangePoints(int pts)
     {
